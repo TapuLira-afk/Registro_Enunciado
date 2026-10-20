@@ -1,18 +1,22 @@
-# 14 · Login
+﻿# 15 · Registro de usuario
 
-**Formularios, expresiones regulares y eventos · 45–60 minutos**
+**Formularios, regex y arrays · 60–75 minutos**
 
-Programa el acceso a una cuenta de jugador. Tienes el HTML, el CSS y una cuenta ficticia en `src/js/index.js`. Escribe en ese archivo toda la lógica, sin librerías.
+Programa el registro de una cuenta de jugador en `src/js/index.js`. Tienes HTML, CSS y el array `usuariosRegistrados`, que simula nombres ocupados. No se proporciona lógica resuelta.
 
 ## Requisitos
 
-- **Usuario o email:** un único campo obligatorio. Elimina los espacios de los extremos. Si contiene `@`, comprueba con una expresión regular que tenga texto antes y después de `@`, un punto en el dominio y una extensión de al menos dos letras, sin espacios ni más de una `@`. Si no contiene `@`, admite de 3 a 20 caracteres: letras de A a Z, números y guion bajo.
-- **Contraseña:** obligatoria, entre 8 y 64 caracteres y sin espacios en blanco. No elimines espacios ni cambies sus mayúsculas.
-- **Mostrar u ocultar:** el botón del ojo alterna la visibilidad sin borrar la contraseña ni enviar el formulario. Actualiza su etiqueta accesible y `aria-pressed`; el CSS cambia el icono.
-- **Errores:** valida al salir de cada campo y al enviar. Muestra el error junto al campo y actualiza `aria-invalid`. Cuando el usuario corrija un campo que ya se ha validado, actualiza su error mientras escribe. Al enviar, lleva el foco al primer campo incorrecto.
-- **Acceso:** evita la recarga. Si los formatos son válidos, compara con `cuentaPrueba`: permite su usuario o su email, sin distinguir mayúsculas; la contraseña debe coincidir exactamente. Muestra «Acceso correcto» o «Usuario/email o contraseña incorrectos», sin revelar qué credencial ha fallado. Borra ese mensaje cuando se edite cualquier campo.
+Todos los campos son obligatorios. Haz las validaciones **en JavaScript**, sin librerías ni atributos `required`, `minlength`, `maxlength`, `pattern`, `min` o `max`.
 
-Haz **todas las validaciones en JavaScript**: no añadas `required`, `minlength`, `maxlength` ni `pattern` al HTML. Permite enviar con el botón o con Enter y manejar el ojo con teclado. No uses `alert`, no guardes contraseñas ni envíes datos a un servidor: es una simulación de acceso, no una autenticación real.
+- **Nombre de usuario:** de 3 a 20 caracteres; solo letras de A a Z, números y guion bajo. Quita los espacios de los extremos. Mientras se escribe, comprueba el formato y que no esté en el array, ignorando mayúsculas. Muestra «Nombre disponible» solo si cumple ambas condiciones; en caso contrario, explica el error.
+- **Email:** elimina espacios de los extremos y valida mediante regex: texto antes y después de una única `@`, punto en el dominio y extensión de al menos dos letras, sin espacios. No necesitas comprobar si ese email ya existe.
+- **Fecha de nacimiento:** fecha real, no vacía y anterior o igual a hoy, según la fecha local. No se exige edad mínima.
+- **Contraseña:** de 8 a 64 caracteres, al menos una minúscula de a–z, una mayúscula de A–Z y un número; sin espacios en blanco. No la recortes ni cambies su contenido.
+- **Confirmación:** debe coincidir exactamente con la contraseña. Si se modifica la original después de validar la confirmación, comprueba de nuevo la coincidencia.
+- **Ojos:** cada botón muestra u oculta su propio campo sin modificarlo ni enviar el formulario. Actualiza su etiqueta accesible y `aria-pressed`.
+- **Errores y envío:** valida los demás campos al salir y al enviar; una vez revisados, actualiza sus errores al escribir. Muestra errores junto a cada campo y actualiza `aria-invalid`. Evita la recarga y enfoca el primer campo incorrecto. Si todo es válido, añade el nombre al array y muestra «Registro simulado completado». Limpia el formulario, los errores y los avisos de disponibilidad, y vuelve a ocultar las contraseñas conservando el mensaje de éxito hasta la siguiente edición.
+
+Permite enviar con Enter y usar los ojos con teclado. No uses `alert`, servidor ni almacenamiento: guarda únicamente el nombre en el array durante esa sesión de página; al recargar se recuperan los nombres iniciales. No guardes ni muestres las contraseñas fuera de sus campos.
 
 ## Ayuda: accesibilidad y expresiones regulares
 
@@ -47,11 +51,11 @@ En las otras regex, `[A-Za-z0-9_]` permite letras, números o guion bajo; `{3,20
 
 | Prueba | Resultado |
 | --- | --- |
-| Enviar vacío, usuario `ab`, email `ana@` o contraseña de 7 caracteres | Error junto al campo correspondiente. |
-| Usuario `PLAYER_ONE` o email `player@example.com`, con `Juego2026!` | Acceso correcto por ambas vías. |
-| Usuario `otro_user` con `Juego2026!`, o `player_one` con `juego2026!` | Credenciales incorrectas. |
-| Pulsar el ojo dos veces | Muestra y vuelve a ocultar la contraseña sin modificarla. |
-| Corregir un error y enviar con Enter | El error se actualiza y el formulario funciona sin recargar. |
+| Escribir ` PLAYER_ONE ` o `ab` | Nombre ocupado o formato incorrecto. |
+| `nova_7`, `nova@example.com`, `2000-01-01` y `Juego2026!` en ambas contraseñas | Registro correcto; `nova_7` queda ocupado al escribirlo de nuevo. |
+| Email `ana@`, fecha vacía o de mañana | Error en el campo correspondiente. |
+| Contraseña `juego2026`, de 7 caracteres o distinta de la confirmación | Error; no se registra el nombre. |
+| Cambiar la contraseña tras confirmar y pulsar ambos ojos | Se actualiza la coincidencia; cada ojo controla solo su campo. |
 
 Entrega la carpeta con tu JavaScript terminado.
 
